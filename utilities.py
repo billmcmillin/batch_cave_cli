@@ -55,6 +55,14 @@ class utilityFunctions:
         x = open(mrkFileName).read()
         return x
 
+    def BreakMarcFile(self, x):
+        print(x)
+        mrkFileName = re.sub('.mrc', '.mrk', x)
+        print("\n<Breaking MARC file>\n")
+
+        x = open(mrkFileName).read()
+        return x
+
     def DeleteLocGov(self, x):
         x = re.sub('(?m)^=856.*www.loc.gov.*\n', '', x)
         x = re.sub('(?m)^=856.*www.e-streams.com.*\n', '', x)
