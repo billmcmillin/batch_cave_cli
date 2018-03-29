@@ -1,4 +1,5 @@
 import inspect, re, subprocess
+from pymarc import Record, Field, MARCReader, marcxml
 
 class utilityFunctions:
 
@@ -43,24 +44,35 @@ class utilityFunctions:
     def MarcEditXmlToMarc(self, x):
         mrcFileName = re.sub('.xml', '.mrc', x)
         print('\n<Converting from XML to MARC>\n')
-        subprocess.call([MonoBin,MarcEditBin,"-s", x, "-d",mrcFileName,"-xmlmarc","-marc8", "-mxslt","/opt/marcedit/xslt/MARC21XML2Mnemonic_plugin.xsl"])
-        return mrcFileName
+        #subprocess.call([MonoBin,MarcEditBin,"-s", x, "-d",mrcFileName,"-xmlmarc","-marc8", "-mxslt","/opt/marcedit/xslt/MARC21XML2Mnemonic_plugin.xsl"])
+        with open(x, 'rb') as fh:
+            recs = marcxml.parse_xml_to_array(fh)
+
+        return recs.records.as_marc()
 
     def MarcEditBreakFile(self, x):
+        #break the file; output .mrk
+        #mrkFileName = re.sub('.mrc', '.mrk', x)
+        print("\n<Breaking MARC file>\n")
+        #marcedit process
+        #subprocess.call([MonoBin,MarcEditBin,"-s", x, "-d", mrkFileName,"-break"])
+        with open(x, 'rb') as fh:
+            reader = MARCReader(fh)
+            x = ''
+            for rec in reader:
+                x += str(rec) + '\n'
+        #marcedit process
+        #x = open(mrkFileName).read()
+        return x
+
+    def BreakFile(self, x):
         #break the file; output .mrk
         print(x)
         mrkFileName = re.sub('.mrc', '.mrk', x)
         print("\n<Breaking MARC file>\n")
         subprocess.call([MonoBin,MarcEditBin,"-s", x, "-d", mrkFileName,"-break"])
         x = open(mrkFileName).read()
-        return x
-
-    def BreakMarcFile(self, x):
         print(x)
-        mrkFileName = re.sub('.mrc', '.mrk', x)
-        print("\n<Breaking MARC file>\n")
-
-        x = open(mrkFileName).read()
         return x
 
     def DeleteLocGov(self, x):

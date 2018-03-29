@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<marc:collection xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:marc="http://www.loc.gov/MARC21/slim" xsi:schemaLocation="http://www.loc.gov/MARC21/slim http://www.loc.gov/standards/marcxml/schema/MARC21slim.xsd">
+  <marc:record>
+    <marc:leader>01125npc i2200289Ki 4500</marc:leader>
+    <marc:controlfield tag="008">040320k19182013xx\\\\\\\\\\\\000\0\eng\d</marc:controlfield>
+    <marc:datafield tag="040" ind1=" " ind2=" ">
+      <marc:subfield code="a">CIN</marc:subfield>
+      <marc:subfield code="b">eng</marc:subfield>
+      <marc:subfield code="e">dacs</marc:subfield>
+      <marc:subfield code="c">CIN</marc:subfield>
+    </marc:datafield>
+    <marc:datafield tag="099" ind1=" " ind2=" ">
+      <marc:subfield code="a">US-14-05</marc:subfield>
+    </marc:datafield>
+    <marc:datafield tag="110" ind1="2" ind2=" ">
+      <marc:subfield code="a">Cincinnati Ballet</marc:subfield>
+    </marc:datafield>
+    <marc:datafield tag="245" ind1="1" ind2="0">
+      <marc:subfield code="a">Cincinnati Ballet records,</marc:subfield>
+      <marc:subfield code="f">1918-2013</marc:subfield>
+      <marc:subfield code="g">(bulk 1964-2012).</marc:subfield>
+    </marc:datafield>
+    <marc:datafield tag="264" ind1=" " ind2="0">
+      <marc:subfield code="c">1918-2013.</marc:subfield>
+    </marc:datafield>
+    <marc:datafield tag="264" ind1=" " ind2="0">
+      <marc:subfield code="c">1964-2012.</marc:subfield>
+    </marc:datafield>
+    <marc:datafield tag="300" ind1=" " ind2=" ">
+      <marc:subfield code="a">41 linear feet.</marc:subfield>
+    </marc:datafield>
+    <marc:datafield tag="506" ind1=" " ind2=" ">
+      <marc:subfield code="a">This collection is open for research.</marc:subfield>
+    </marc:datafield>
+    <marc:datafield tag="520" ind1="3" ind2=" ">
+      <marc:subfield code="a">Records of the Cincinnati Ballet including photographs, production information, former dancer files, scrapbooks, and advertising information.</marc:subfield>
+    </marc:datafield>
+    <marc:datafield tag="545" ind1="1" ind2=" ">
+      <marc:subfield code="a">The Cincinnati Ballet was chartered as the "Cincinnati Civic Ballet" in 1958. The company held their first auditions in 1963 and the original troupe consisted of 41 dancers. Oleg Sabline served as the first artistic director and John A. Spain was the first president of the Board of Trustees. The first performance took place at the University of Cincinnati's Wilson Auditorium in March of 1964.</marc:subfield>
+    </marc:datafield>
+    <marc:datafield tag="546" ind1=" " ind2=" ">
+      <marc:subfield code="a">The records are in English.</marc:subfield>
+    </marc:datafield>
+    <marc:datafield tag="610" ind1="2" ind2="0">
+      <marc:subfield code="a">University of Cincinnati. </marc:subfield>
+      <marc:subfield code="b">College-Conservatory of Music</marc:subfield>
+    </marc:datafield>
+    <marc:datafield tag="650" ind1=" " ind2="0">
+      <marc:subfield code="a">Ballet</marc:subfield>
+      <marc:subfield code="z">Ohio</marc:subfield>
+      <marc:subfield code="z">Cincinnati</marc:subfield>
+    </marc:datafield>
+    <marc:datafield tag="650" ind1=" " ind2="0">
+      <marc:subfield code="a">Dance history</marc:subfield>
+    </marc:datafield>
+    <marc:datafield tag="650" ind1=" " ind2="0">
+      <marc:subfield code="a">Dance schools</marc:subfield>
+      <marc:subfield code="z">Ohio</marc:subfield>
+      <marc:subfield code="z">Cincinnati</marc:subfield>
+    </marc:datafield>
+    <marc:datafield tag="852" ind1=" " ind2=" ">
+      <marc:subfield code="a">University of Cincinnati.</marc:subfield>
+      <marc:subfield code="b">Archives and Rare Book Library</marc:subfield>
+    </marc:datafield>
+    <marc:datafield tag="856" ind1="4" ind2="0">
+      <marc:subfield code="u">http://rave.ohiolink.edu/archives/ead/OhCiUAR0430</marc:subfield>
+      <marc:subfield code="z">Connect to finding aid online</marc:subfield>
+    </marc:datafield>
+  </marc:record>
+</marc:collection>
