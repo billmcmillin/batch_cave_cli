@@ -1,4 +1,5 @@
 import pdb
+from pymarc import MARCReader, Record, Field
 from tkinter import *
 from tkinter.filedialog import askopenfilename
 #import os, subprocess, re, htmlentitydefs, inspect, sys, MARC_lang, platform
@@ -22,7 +23,7 @@ class batchEdits:
     def ER_EAI_2nd(self, x, name='ER-EAI-2ND'):
         print('\nRunning change script '+ name + '\n')
         #print(filename)
-        x = utilities.MarcEditBreakFile(filename)
+        x = utilities.BreakMARCFile(filename)
         # Change =001 field to =002, and add 003
         x = re.sub('(?m)^=001  (.*)', '=002  \\1\n=003  ER-EAI-2nd', x)
         # ADD local 730, 949 before supplied 008
@@ -30,39 +31,66 @@ class batchEdits:
         x = utilities.DeleteLocGov(x)
         x = utilities.Standardize856_956(x)
         x = utilities.CharRefTrans(x)
-        x = utilities.MarcEditSaveToMRK(x, filename)
+        x = utilities.SaveToMRK(x, filename)
+        x = utilities.MarcEditMakeFile(x, filename)
+        return x
+
+    def ER_EAI_1st_BAK(self, x, name='ER-EAI-1st'):
+        print('\nRunning change script '+ name + '\n')
+        #print(filename)
+        x = utilities.BreakMARCFile(filename)
+        # Change =001 field to =002, and add 003
+        #x = re.sub('(?m)^=001  (.*)', '=002  \\1\n=003  ER-EAI-1st', x)
+        # ADD local 730, 949 before supplied 008
+        #x = re.sub('(?m)^=008', r'=949  \\\\$a*b3=z;bn=buint;\n=949  \\1$luint$rs$t99\n=730  0\$aEarly American imprints (Online).$nFirst series,$pEvans.$5OCU\n=506  \\\\$aAccess restricted to users at subscribing institutions\n=008', x)
+        x = utilities.DeleteLocGov(x)
+        x = utilities.Standardize856_956(x,'Readex')
+        x = utilities.CharRefTrans(x)
+        x = utilities.SaveToMRK(x, filename)
         x = utilities.MarcEditMakeFile(x, filename)
         return x
 
     def ER_EAI_1st(self, x, name='ER-EAI-1st'):
         print('\nRunning change script '+ name + '\n')
-        #print(filename)
-        x = utilities.MarcEditBreakFile(filename)
         # Change =001 field to =002, and add 003
-        x = re.sub('(?m)^=001  (.*)', '=002  \\1\n=003  ER-EAI-1st', x)
-        # ADD local 730, 949 before supplied 008
-        x = re.sub('(?m)^=008', r'=949  \\\\$a*b3=z;bn=buint;\n=949  \\1$luint$rs$t99\n=730  0\$aEarly American imprints (Online).$nFirst series,$pEvans.$5OCU\n=506  \\\\$aAccess restricted to users at subscribing institutions\n=008', x)
+        # x = re.sub('(?m)^=001  (.*)', '=002  \\1\n=003  ER-EAI-1st', x)
+        #iterate over list of Record objects
+        recs = utilities.BreakMARCFile(x)
+        print(recs)
+        for rec in recs:
+            rec.add_field(Field(tag = '002',data = rec['001'].value()))
+            rec.add_field(Field(tag = '949', indicators = ['\\', '\\'], subfields = ['a','*b3=z;bn=buint;']))
+            rec.add_field(Field(tag = '949', indicators = ['\\', '1'], subfields = ['l','uint', 'r', 's', 't', '99']))
+            rec.add_field(Field(tag = '730', indicators = ['0', '\\'], subfields = ['a','Early American imprints (Online).', 'n', 'Second series,', 'p','Shaw-Shoemaker.', '5', 'OCU']))
+            rec.add_field(Field(tag = '506', indicators = ['\\', ''], subfields = ['a','Access restricted to users at subscribing institutions']))
+            rec.remove_field(rec.get_fields('008')[0])
+            rec = utilities.DeleteLocGov(rec)
+            rec = utilities.Standardize856_956(rec, 'Readex')
+            rec = utilities.CharRefTrans(rec)
+        rec = utilities.SaveToMRK(recs, filename)
+        x = utilities.MakeMARCFile(recs, filename)
+        return x
+
+########### TODO: add ER_OECD ################
+
+
+    def ER_OCLC_WCS_SDebk(self, x, name='ER-OCLC-WCS-SDebk'):
+        print('\nRunning change script '+ name + '\n')
+        x = utilities.BreakMARCFile(x)
+        x = re.sub('(?m)^=003', r'=949  \\1$luint$rs$t99\n=949  \\\\$a*bn=buint;\n=730  0\\$aScienceDirect eBook Series.$5OCU\n=003  ER-OCLC-WCS-SDebk\n=002  OCLC-WCS-SDebk\n=003', x)
+        #change 856 to 956
+        x = re.sub('(?m)^=856', '=956', x)
+        #add colon to 956$3
+        x = re.sub('(?m)\$3ScienceDirect', '$3ScienceDirect :', x)
         x = utilities.DeleteLocGov(x)
-        x = utilities.Standardize856_956(x,'Readex')
+        x = utilities.Standardize856_956(x)
         x = utilities.CharRefTrans(x)
-        x = utilities.MarcEditSaveToMRK(x, filename)
+        x = utilities.SaveToMRK(x, filename)
         x = utilities.MarcEditMakeFile(x, filename)
         return x
 
-    def ER_OECD(self, x, name='ER-OECD'):
-        print('\nRunning change script '+ name + '\n')
-        #translate xml to MARC and break file
-        x = utilities.MarcEditXmlToMarc(x)
-        x = utilities.MarcEditBreakFile(x)
-        def ER_OECD_iLibrary_Bks_NO300(x):
-            # Change =001 field to =002, and add 003
-            x = re.sub('(?m)^=001  (.*)', '=002  oecd_\\1\n=003  ER-OECD-iLibrary-Bks', x)
-            # ADD local 730, 949 before supplied 008
-            x = re.sub('(?m)^=008', r'=949  \\\$a*b3=z;bn=buint;\n=949  \\1$luint$rs$t99\n=730  0\$aOECD iLibrary.$pBooks.$5OCU\n=300  \\\\$a1 electronic text :$bdigital PDF file\n=506  \\\\$aAccess restricted to users at subscribing institutions\n=008', x)
-            # 04-05-10 DELETE  lines
-            x = re.sub('(?m)^=024.*\n', '', x)
-            x = re.sub('(?m)^=035.*\n', '', x)
-            return x
+
+
 reStart = ''
 
 while reStart == '' or reStart == 'y':

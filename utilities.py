@@ -1,5 +1,5 @@
 import inspect, re, subprocess
-from pymarc import Record, Field, MARCReader, marcxml
+from pymarc import Record, Field, MARCReader, MARCWriter, marcxml
 
 class utilityFunctions:
 
@@ -45,12 +45,15 @@ class utilityFunctions:
         mrcFileName = re.sub('.xml', '.mrc', x)
         print('\n<Converting from XML to MARC>\n')
         #subprocess.call([MonoBin,MarcEditBin,"-s", x, "-d",mrcFileName,"-xmlmarc","-marc8", "-mxslt","/opt/marcedit/xslt/MARC21XML2Mnemonic_plugin.xsl"])
+        marcStr = ''
         with open(x, 'rb') as fh:
             recs = marcxml.parse_xml_to_array(fh)
+            for rec in recs:
+                marcStr += str(rec)
 
-        return recs.records.as_marc()
+        return marcStr
 
-    def MarcEditBreakFile(self, x):
+    def BreakMARCFileBACKUP(self, x):
         #break the file; output .mrk
         #mrkFileName = re.sub('.mrc', '.mrk', x)
         print("\n<Breaking MARC file>\n")
@@ -65,30 +68,79 @@ class utilityFunctions:
         #x = open(mrkFileName).read()
         return x
 
-    def BreakFile(self, x):
-        #break the file; output .mrk
-        print(x)
-        mrkFileName = re.sub('.mrc', '.mrk', x)
-        print("\n<Breaking MARC file>\n")
-        subprocess.call([MonoBin,MarcEditBin,"-s", x, "-d", mrkFileName,"-break"])
-        x = open(mrkFileName).read()
-        print(x)
-        return x
 
-    def DeleteLocGov(self, x):
-        x = re.sub('(?m)^=856.*www.loc.gov.*\n', '', x)
-        x = re.sub('(?m)^=856.*www.e-streams.com.*\n', '', x)
-        x = re.sub('(?m)^=856.*Book review (E-STREAMS).*\n', '', x)
-        x = re.sub('(?m)^=856.*catdir.loc.gov.*\n', '', x)
-        x = re.sub('(?m)^=856.*books.google.com.*\n', '', x)
-        x = re.sub('(?m)^=856.*cover image.*\n', '', x)
-        x = re.sub('(?m)^=856.*http://d-nb.info.*\n', '', x)
-        x = re.sub('(?m)^=856.*http://deposit.d-nb.de/cgi-bin.*\n', '', x)
-        return x
+    def BreakMARCFile(self, x):
+        #break the file into a list of Record objects;
+        #mrkFileName = re.sub('.mrc', '.mrk', x)
+        print("\n<Breaking MARC file>\n")
+        records = []
+        with open(x, 'rb') as fh:
+            reader = MARCReader(fh)
+            for rec in reader:
+                records.append(rec)
+        return records
+
+    def DeleteLocGov(self, rec):
+        regexes = [
+            re.compile(r'.*www.loc.gov.*\n'),
+            re.compile(r'.*www.e-streams.com.*\n'),
+            re.compile(r'.*Book review (E-STREAMS).*\n'),
+            re.compile(r'.*catdir.loc.gov.*\n'),
+            re.compile(r'.*books.google.com.*\n'),
+            re.compile(r'.*cover image.*\n'),
+            re.compile(r'.*http://d-nb.info.*\n'),
+            re.compile(r'.*http://deposit.d-nb.de/cgi-bin.*\n'),
+        ]
+        #if an 856 field is present, check it against the above patterns.
+        # if found, delete the field
+        if rec['856'] is not None:
+            url = rec['856'].value()
+            if any(regex.match(url) for regex in regexes):
+                rec.remove_field(rec.get_fields('856')[0])
+        return rec
+
+    def CleanURL(self,url):
+        #delete all occurrences of $2
+        url.delete_subfield('2')
+        #delete all $z
+        url.delete_subfield('z')
+        #add standard $z
+        url.add_subfield('z', 'Connect to resource online')
+        #delete all $q
+        url.delete_subfield('q')
+        #delete all $y
+        url.delete_subfield('y')
+        #move leading $3 to EOF
+        #
+        return url
 
     def Standardize856_956(self, *args):
+        rec = args[0]
+        if rec['856'] is not None:
+                field856 = rec['856']
+                if rec['856'].indicator1 != '4':
+                    print('Found URL field with unexpected indicator')
+                self.CleanURL(field856)
+
+        if rec['956'] is not None:
+            if rec['956'].indicator1 != '4':
+                print('Found URL field with unexpected indicator')
+                self.CleanURL(field956)
+
+        if len(args) > 1 and type(args[1]) == str:
+            rec['856'].add_subfield('3', args[1])
+            return rec
+
+    def Standardize856_956_BAK(self, *args):
+        rec = args[0]
         output = []
         #Check 8/956 indicator 1 code for non http URL
+        if rec['856'] is not None:
+            field856 = rec['856'].value()
+            print(field856)
+        if rec['956'] is not None:
+            field956 = rec['956'].value()
+            print(field956)
         URLFieldInd1 = re.findall('=[8|9]56  [^4]..*', args[0])
         #if found, interrupt script with alert
         if URLFieldInd1:
@@ -124,7 +176,7 @@ class utilityFunctions:
         x = '\n'.join(output)
         return x
 
-    def CharRefTrans(self, x):#Character reference translation table
+    def CharRefTrans(self, rec):#Character reference translation table
         CharRefTransTable = {
             #Hex char refs
             '&#039;' : ['&#039;', '\"'],
@@ -399,34 +451,36 @@ class utilityFunctions:
 
         keys = list(dict.keys(CharRefTransTable))
         for key in range(len(keys)):
-            x = re.sub(CharRefTransTable[keys[key]][0], CharRefTransTable[keys[key]][1], x)
-        #Flag unknown Char Refs
-        UnrecognizedCharRef = list(set(re.findall('&[\d|\w|#]*;', x)))
-        if UnrecognizedCharRef:
-            #sound bell
-            print('\a\a\a\a\a\n<Found unrecognized characters>\n\n\t...generating error file\n')
-            BoolUnrecognizedCharRef = 1
-            CharRefIf = open(filename + '_UnrecognizedCharRef.txt', 'w')
-            CharRefIf.write('Unrecognized character references\n')
-            CharRefIf.write('\n'.join(UnrecognizedCharRef))
-            CharRefIf.close()
-        return x
+            for x in rec:
+                x = re.sub(CharRefTransTable[keys[key]][0],CharRefTransTable[keys[key]][1], x.value())
+            #Flag unknown Char Refs
+            UnrecognizedCharRef = list(set(re.findall('&[\d|\w|#]*;', x)))
+            if UnrecognizedCharRef:
+                #sound bell
+                print('\a\a\a\a\a\n<Found unrecognized characters>\n\n\t...generating error file\n')
+                BoolUnrecognizedCharRef = 1
+                CharRefIf = open(filename + '_UnrecognizedCharRef.txt', 'w')
+                CharRefIf.write('Unrecognized character references\n')
+                CharRefIf.write('\n'.join(UnrecognizedCharRef))
+                CharRefIf.close()
+        return rec
 
-    def MarcEditSaveToMRK(self, x, filename):
+
+    def SaveToMRK(self, recs, filename):
         filenameNoExt = re.sub('.\w*$', '', filename)
         outfile = open(filenameNoExt + '_OUT.mrk', 'w')
-        outfile.write(x)
+        for r in recs:
+            outfile.write(str(r) + '\n')
         outfile.close()
-        return
+        return recs
 
-    def MarcEditMakeFile(self, x, filename):
+    def MakeMARCFile(self, recs, filename):
         filenameNoExt = re.sub('.\w*$', '', filename)
+        mrcFileName = filenameNoExt + '_OUT.mrc'
         print('\n<Compiling file to MARC>\n')
-        subprocess.call([MonoBin,MarcEditBin,"-s", filenameNoExt+"_OUT.mrk","-d",filenameNoExt + "_OUT.mrc","-make"])
-        return x
+        writer = MARCWriter(open(mrcFileName, "wb"))
+        for r in recs:
+            writer.write(r)
+        writer.close()
+        return recs
 
-global MonoBin
-MonoBin = "/usr/bin/mono"
-
-global MarcEditBin
-MarcEditBin = '/opt/marcedit/cmarcedit.exe'

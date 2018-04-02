@@ -1,16 +1,10 @@
 =LDR  01929ngm a2200493 i 4500
-=002  kan1464136
-=003  ER-EAI-1st
+=001  kan1464136
 =003  CaSfKAN
 =005  20140324125357.0
 =006  m\\\\\o\\c\\\\\\\\
 =007  vz\uzazuu
 =007  cr\una---unuuu
-=949  \\$a*b3=z;bn=buint;
-=949  \1$luint$rs$t99
-=730  0\$aEarly American imprints (Online).$nFirst series,$pEvans.$5OCU
-=506  \\$aAccess restricted to users at subscribing institutions
-=008  170712p20172016cau102\\\\\\\\o\\\vlfre\d
 =028  52$a1464136$bKanopy
 =040  \\$aUtOrKAN$beng$erda$cUtOrKAN
 =245  04$aThe stopover =$bVoir du pays.
@@ -42,21 +36,20 @@
 =700  1\$aSoko,$d1986-$eactor.
 =710  2\$aFirst Run Features (Firm),$4dst
 =710  2\$aKanopy (Firm),$4dst
-=856  40$uhttp://uc.kanopystreaming.com/node/464137$3Readex :$zConnect to resource online
+=856  40$uhttp://uc.kanopystreaming.com/node/464137$zConnect to resource online$3Readex
+=002  kan1464136
+=949  \\$a*b3=z;bn=buint;
+=949  \1$luint$rs$t99
+=730  0\$aEarly American imprints (Online).$nSecond series,$pShaw-Shoemaker.$5OCU
+=506  \$aAccess restricted to users at subscribing institutions
 
 =LDR  01778ngm a2200421 i 4500
-=002  kan1497493
-=003  ER-EAI-1st
+=001  kan1497493
 =003  CaSfKAN
 =005  20140324125357.0
 =006  m\\\\\o\\c\\\\\\\\
 =007  vz\uzazuu
 =007  cr\una---unuuu
-=949  \\$a*b3=z;bn=buint;
-=949  \1$luint$rs$t99
-=730  0\$aEarly American imprints (Online).$nFirst series,$pEvans.$5OCU
-=506  \\$aAccess restricted to users at subscribing institutions
-=008  170719p20172017cau089\\\\\\\\o\\\vleng\d
 =028  52$a1497493$bKanopy
 =040  \\$aUtOrKAN$beng$erda$cUtOrKAN
 =245  00$aAlmost adults.
@@ -82,20 +75,19 @@
 =700  1\$aNegovanlis, Natasha,$eactor.
 =710  2\$aGravitas (Firm),$4dst
 =710  2\$aKanopy (Firm),$4dst
-=856  40$uhttp://uc.kanopystreaming.com/node/497494$3Readex :$zConnect to resource online
+=856  40$uhttp://uc.kanopystreaming.com/node/497494$zConnect to resource online$3Readex
+=002  kan1497493
+=949  \\$a*b3=z;bn=buint;
+=949  \1$luint$rs$t99
+=730  0\$aEarly American imprints (Online).$nSecond series,$pShaw-Shoemaker.$5OCU
+=506  \$aAccess restricted to users at subscribing institutions
 
 =LDR  01630ngm a2200361ua 4500
-=002  kan1166011
-=003  ER-EAI-1st
+=001  kan1166011
 =003  CaSfKAN
 =006  m\\\\\o\\c\\\\\\\\
 =007  vz\uzazuu
 =007  cr\una---unuuu
-=949  \\$a*b3=z;bn=buint;
-=949  \1$luint$rs$t99
-=730  0\$aEarly American imprints (Online).$nFirst series,$pEvans.$5OCU
-=506  \\$aAccess restricted to users at subscribing institutions
-=008  170721p20172010cau050\\\\\\\\o\\\vleng\d
 =028  52$a1166011$bKanopy
 =035  \\$a(OCoLC)945762855
 =040  \\$aVDU$beng$cVDU
@@ -117,20 +109,19 @@
 =700  1\$aChadwick, Hilary,$efilmmaker 
 =710  2\$aArthaus Musik (Firm),$4dst
 =710  2\$aKanopy (Firm),$4dst
-=856  40$uhttp://uc.kanopystreaming.com/node/166012$3Readex :$zConnect to resource online
+=856  40$uhttp://uc.kanopystreaming.com/node/166012$zConnect to resource online$3Readex
+=002  kan1166011
+=949  \\$a*b3=z;bn=buint;
+=949  \1$luint$rs$t99
+=730  0\$aEarly American imprints (Online).$nSecond series,$pShaw-Shoemaker.$5OCU
+=506  \$aAccess restricted to users at subscribing institutions
 
 =LDR  01498ngm a2200361za 4500
-=002  kan1149871
-=003  ER-EAI-1st
+=001  kan1149871
 =003  CaSfKAN
 =006  m\\\\\o\\c\\\\\\\\
 =007  vz\uzazuu
 =007  cr\una---unuuu
-=949  \\$a*b3=z;bn=buint;
-=949  \1$luint$rs$t99
-=730  0\$aEarly American imprints (Online).$nFirst series,$pEvans.$5OCU
-=506  \\$aAccess restricted to users at subscribing institutions
-=008  170724p20172012cau039\\\\\\\\o\\\vlund\d
 =028  52$a1149871$bKanopy
 =035  \\$a(OCoLC)921956686
 =040  \\$aVDU$beng$cVDU
@@ -152,5 +143,10 @@
 =653  \\$aFood Technology
 =710  2\$aThe Great Courses (Firm),$4dst
 =710  2\$aKanopy (Firm),$4dst
-=856  40$uhttp://uc.kanopystreaming.com/node/149872$3Readex :$zConnect to resource online
+=856  40$uhttp://uc.kanopystreaming.com/node/149872$zConnect to resource online$3Readex
+=002  kan1149871
+=949  \\$a*b3=z;bn=buint;
+=949  \1$luint$rs$t99
+=730  0\$aEarly American imprints (Online).$nSecond series,$pShaw-Shoemaker.$5OCU
+=506  \$aAccess restricted to users at subscribing institutions
 
