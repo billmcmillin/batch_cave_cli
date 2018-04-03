@@ -3,7 +3,7 @@ from pymarc import MARCReader, Record, Field
 from tkinter import *
 from tkinter.filedialog import askopenfilename
 #import os, subprocess, re, htmlentitydefs, inspect, sys, MARC_lang, platform
-import os, html.parser, sys, MARC_lang, platform
+import os, html.parser, sys, MARC_lang, platform, re
 from time import sleep, strftime
 from utilities import utilityFunctions
 
@@ -45,7 +45,6 @@ class batchEdits:
 
     def ER_EAI_1st(self, x, name='ER-EAI-1st'):
         print('\nRunning change script '+ name + '\n')
-        # x = re.sub('(?m)^=001  (.*)', '=002  \\1\n=003  ER-EAI-1st', x)
         #iterate over list of Record objects
         recs = utilities.BreakMARCFile(x)
         for rec in recs:
@@ -71,20 +70,95 @@ class batchEdits:
 
     def ER_OCLC_WCS_SDebk(self, x, name='ER-OCLC-WCS-SDebk'):
         print('\nRunning change script '+ name + '\n')
-        x = utilities.BreakMARCFile(x)
-        x = re.sub('(?m)^=003', r'=949  \\1$luint$rs$t99\n=949  \\\\$a*bn=buint;\n=730  0\\$aScienceDirect eBook Series.$5OCU\n=003  ER-OCLC-WCS-SDebk\n=002  OCLC-WCS-SDebk\n=003', x)
-        #change 856 to 956
-        x = re.sub('(?m)^=856', '=956', x)
-        #add colon to 956$3
-        x = re.sub('(?m)\$3ScienceDirect', '$3ScienceDirect :', x)
-        x = utilities.DeleteLocGov(x)
-        x = utilities.Standardize856_956(x)
-        x = utilities.CharRefTrans(x)
-        x = utilities.SaveToMRK(x, filename)
-        x = utilities.MarcEditMakeFile(x, filename)
+        recs = utilities.BreakMARCFile(x)
+        for rec in recs:
+            rec.add_ordered_field(Field(tag = '949', indicators = ['\\', '1'], subfields = ['l','uint', 'r', 's', 't', '99']))
+            rec.add_ordered_field(Field(tag = '949', indicators = ['\\', '\\'], subfields = ['a','*b3=z;bn=buint;']))
+            rec.add_ordered_field(Field(tag = '730', indicators = ['0','\\'],subfields = ['a','ScienceDirect cBook Series.', '5', 'OCU']))
+            rec.add_ordered_field(Field(tag = '003',data = 'ER-OCLC-WCS-SDebk'))
+            rec.add_ordered_field(Field(tag = '002',data = 'OCLC-WCS-SDebk'))
+            #change 856 to 956
+            rec.add_ordered_field(Field(tag = '956', data = rec['856'].value()))
+            rec.remove_field(rec.get_fields('856')[0])
+            #add colon to 956$3
+            #x = re.sub('(?m)\$3ScienceDirect', '$3ScienceDirect :', x)
+            rec['956']['3'] = re.sub(r'ScienceDirect', 'ScienceDirect :', rec['956']['3'])
+            rec = utilities.DeleteLocGov(rec)
+            rec = utilities.Standardize856_956(rec, 'Readex')
+            rec = utilities.CharRefTrans(rec)
+        rec = utilities.SaveToMRK(recs, filename)
+        x = utilities.MakeMARCFile(recs, filename)
         return x
 
 
+    def ER_NBER(self, x, name='ER-NBER'):
+        print('\nRunning change script '+ name + '\n')
+        recs = utilities.BreakMARCFile(x)
+        # NBER has begun using two 856 fields. DELETE 856 fields with www.nber.org ... RETAIN 856 fields with dx.doi.org
+        for rec in recs:
+            #x = re.sub('(?m)^=856.*www.nber.org.*\n', '', x)
+            rec.remove_field(rec.get_fields('856')[0])
+            #change 001 to 002, retain first letter and insert initial code
+            rec.add_ordered_field(Field(tag = '002',data = 'nber_' +rec['001'].value()[:1]))
+            #x = re.sub('(?m)^=001  (.*)', '=002  nber \\1', x)
+            #x = re.sub('(?m)^=001  ', '=002  nber_', x) 
+            #ADD 003, 006, , 533, 730, 949 before supplied 008
+            #x = re.sub('(?m)^=008', r'=949  \\1$luint$rs$t99\n=949  \\\\$a*b3=z;bn=buint;\n=830  \\0$aWorking paper series (National Bureau of Economic Research : Online)\n=730  0\\$aNBER working paper series online.$5OCU\n=533  \\\\$aElectronic reproduction.$bCambridge, Mass.$cNational Bureau of Economic Research,$d200-$e1 electronic text : PDF file.$fNBER working paper series.$nAccess restricted to patrons at subscribing institutions\n=007  cr\\mnu\n=006  m\\\\\\\\\\\\\\\\d\\\\\\\\\\\\\\\\\n=003  ER-NBER\n=008', x)
+            # 530 field, change Hardcopy to Print
+            #x = re.sub('(?m)^(=530.*)Hardcopy(.*)', '\\1Print\\2', x)
+            # 490 and 830 fields lack ISBD punctuation, supply where lacking
+            #x = re.sub('(?m)^(=490.*)[^ ;](\$v.*)', '\\1 ;\\2', x)
+            #x = re.sub('(?m)^(=830.*)[^ ;](\$v.*)', '\\1 ;\\2', x)
+            # delete supplied 690 fields
+            #x = re.sub('(?m)^=690.*\n', '', x)
+            rec = utilities.DeleteLocGov(rec)
+            rec = utilities.Standardize856_956(rec, 'NBER')
+            rec = utilities.CharRefTrans(rec)
+            rec = utilities.AddEresourceGMD(rec)
+        rec = utilities.SaveToMRK(recs, filename)
+        x = utilities.MakeMARCFile(recs, filename)
+        return x
+
+    def ER_OL_Safari(self, x, name='ER-O/L-Safari'):
+        print('\nRunning change script '+ name + '\n')
+        recs = utilities.BreakMARCFile(x)
+        regexes = [
+            re.compile(r'.*EBSCOhost.*\n'),
+            re.compile(r'.*OhioLINK.*'),
+            re.compile(r'.*SpringerLink.*\n'),
+            re.compile(r'.*Wiley.*\n'),
+        ]
+
+        for rec in recs:
+            for field in rec:
+                if field.tag == '856':
+                    print(field)
+                    if any(regex.match(field.value()) for regex in regexes):
+                        rec.remove_field(field)
+
+            rec = utilities.CharRefTrans(rec)
+            rec = utilities.AddEresourceGMD(rec)
+        #Insert 002, 003, 730, 949 before supplied 008
+        #x = re.sub('(?m)^=008', r'=949  \\1$lolink$rs$t99\n=949\\\\$a*b3=z;bn=bolin;\n=730  0\\$aSafari books online.$5OCU\n=003 ER-O/L-Safari\n=002  O/L-Safari\n=003', x)
+        #x = re.sub('\$3Safari Books Online', '', x)
+        #edit proxy URLs
+        #x = re.sub('\$zConnect to resource', '$3Safari (ProQuest) :$zConnect to resource online', x)
+        #x = re.sub('\(off-campus access\)', '(Off Campus Access)', x)
+        #x = re.sub('\(off-campus\)', '(Off Campus Access)', x)
+        #x = re.sub('\$zConnect to this resource online', '$3Safari (ProQuest):$zConnect to resource online', x)
+        #x = re.sub('\(off-campus access\)', '(Off Campus Access)', x)
+        #x = re.sub('\$zConnect to electronic resource', '$3Safari(ProQuest):$zConnect to resource online', x)
+        #Change hyperlink tag from 856 to 956
+        #x = re.sub('(?m)^=856', '=956', x)
+        # = utilities.Standardize856_956(x, )
+        #x = utilities.AddEresourceGMD(x)
+        #x = utilities.DeleteLocGov(x)
+        #x = utilities.CharRefTrans(x)
+        #x = utilities.MarcEditSaveToMRK(x)
+        #x = utilities.MarcEditMakeFile(x)
+        rec = utilities.SaveToMRK(recs, filename)
+        x = utilities.MakeMARCFile(recs, filename)
+        return x
 
 reStart = ''
 

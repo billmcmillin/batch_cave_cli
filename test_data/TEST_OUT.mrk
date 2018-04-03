@@ -1,13 +1,15 @@
 =LDR  01929ngm a2200493 i 4500
-=002  kan1464136
-=003  ER-EAI-1st
+=001  kan1464136
+=002  nber_k
+=003  CaSfKAN
 =005  20140324125357.0
 =006  m\\\\\o\\c\\\\\\\\
 =007  vz\uzazuu
 =007  cr\una---unuuu
+=008  170712p20172016cau102\\\\\\\\o\\\vlfre\d
 =028  52$a1464136$bKanopy
 =040  \\$aUtOrKAN$beng$erda$cUtOrKAN
-=245  04$aThe stopover =$bVoir du pays.
+=245  04$aThe stopover =$h[electronic resource]
 =246  31$aVoir du pays
 =264  \1$bFirst Run Features,$c2016.
 =264  \1$a[San Francisco, California, USA] :$bKanopy Streaming,$c2017.
@@ -19,7 +21,6 @@
 =344  \\$adigital
 =347  \\$avideo file$bMPEG-4$bFlash
 =500  \\$aTitle from title frames.
-=506  \$aAccess restricted to users at subscribing institutions
 =518  \\$aOriginally produced by First Run Features in 2016.
 =520  \\$aAt the end of their tour of duty in Afghanistan, two young military women, Aurore and Marine, are given three days of "decompression leave" with their unit, among tourists, at a five-star resort in Cyprus. But it's not that easy to forget the war and leave violence behind.
 =538  \\$aMode of access: World Wide Web.
@@ -37,21 +38,19 @@
 =700  1\$aSoko,$d1986-$eactor.
 =710  2\$aFirst Run Features (Firm),$4dst
 =710  2\$aKanopy (Firm),$4dst
-=730  0\$aEarly American imprints (Online).$nFirst series,$pEvans.$5OCU
-=856  40$uhttp://uc.kanopystreaming.com/node/464137$zConnect to resource online$3Readex
-=949  \\$a*b3=z;bn=buint;
-=949  \1$luint$rs$t99
 
 =LDR  01778ngm a2200421 i 4500
-=002  kan1497493
-=003  ER-EAI-1st
+=001  kan1497493
+=002  nber_k
+=003  CaSfKAN
 =005  20140324125357.0
 =006  m\\\\\o\\c\\\\\\\\
 =007  vz\uzazuu
 =007  cr\una---unuuu
+=008  170719p20172017cau089\\\\\\\\o\\\vleng\d
 =028  52$a1497493$bKanopy
 =040  \\$aUtOrKAN$beng$erda$cUtOrKAN
-=245  00$aAlmost adults.
+=245  00$aAlmost adults.$h[electronic resource]
 =264  \1$bGravitas,$c2017.
 =264  \1$a[San Francisco, California, USA] :$bKanopy Streaming,$c2017.
 =300  \\$a1 online resource (streaming video file) (90 minutes):$bdigital, .flv file, sound
@@ -62,7 +61,6 @@
 =344  \\$adigital
 =347  \\$avideo file$bMPEG-4$bFlash
 =500  \\$aTitle from title frames.
-=506  \$aAccess restricted to users at subscribing institutions
 =518  \\$aOriginally produced by Gravitas in 2017.
 =520  \\$aThis comedy feature follows two best friends in their final year of college while they transition into adulthood. One embraces her sexuality and tries to catch up on everything she has missed during her teenage years, while the other ends a long term relationship with her boyfriend and discovers her life isn't going as planned. Both struggle to keep their friendship together as they begin growing apart.
 =538  \\$aMode of access: World Wide Web.
@@ -75,21 +73,19 @@
 =700  1\$aNegovanlis, Natasha,$eactor.
 =710  2\$aGravitas (Firm),$4dst
 =710  2\$aKanopy (Firm),$4dst
-=730  0\$aEarly American imprints (Online).$nFirst series,$pEvans.$5OCU
-=856  40$uhttp://uc.kanopystreaming.com/node/497494$zConnect to resource online$3Readex
-=949  \\$a*b3=z;bn=buint;
-=949  \1$luint$rs$t99
 
 =LDR  01630ngm a2200361ua 4500
-=002  kan1166011
-=003  ER-EAI-1st
+=001  kan1166011
+=002  nber_k
+=003  CaSfKAN
 =006  m\\\\\o\\c\\\\\\\\
 =007  vz\uzazuu
 =007  cr\una---unuuu
+=008  170721p20172010cau050\\\\\\\\o\\\vleng\d
 =028  52$a1166011$bKanopy
 =035  \\$a(OCoLC)945762855
 =040  \\$aVDU$beng$cVDU
-=245  00$aToulouse-Lautrec
+=245  00$aToulouse-Lautrec$h[electronic resource]
 =264  \1$bArthaus Musik,$c2010.
 =264  \1$a[San Francisco, California, USA] :$bKanopy Streaming,$c2017.
 =300  \\$a1 online resource (streaming video file) (51 minutes):$bdigital, .flv file, sound
@@ -99,7 +95,6 @@
 =338  \\$aonline resource$bcr$2rdacarrier
 =500  \\$aIn Process Record.
 =500  \\$aTitle from title frames.
-=506  \$aAccess restricted to users at subscribing institutions
 =518  \\$aOriginally produced by Arthaus Musik in 2010.
 =520  \\$a  Known best for his vivid portrayals of the famous Moulin Rouge nightclub, 19th-century French painter Henri Toulouse-Lautrec had a difficult life: He was crippled by a genetic disease and died at 36 after years of alcoholism and syphilis had racked his body. This gripping program looks at Toulouse-Lautrec's life and art, and leading authorities, art historians and scholars offer analysis and commentary that provide an inside look at the artist.
 =538  \\$aMode of access: World Wide Web.
@@ -108,21 +103,19 @@
 =700  1\$aChadwick, Hilary,$efilmmaker 
 =710  2\$aArthaus Musik (Firm),$4dst
 =710  2\$aKanopy (Firm),$4dst
-=730  0\$aEarly American imprints (Online).$nFirst series,$pEvans.$5OCU
-=856  40$uhttp://uc.kanopystreaming.com/node/166012$zConnect to resource online$3Readex
-=949  \\$a*b3=z;bn=buint;
-=949  \1$luint$rs$t99
 
 =LDR  01498ngm a2200361za 4500
-=002  kan1149871
-=003  ER-EAI-1st
+=001  kan1149871
+=002  nber_k
+=003  CaSfKAN
 =006  m\\\\\o\\c\\\\\\\\
 =007  vz\uzazuu
 =007  cr\una---unuuu
+=008  170724p20172012cau039\\\\\\\\o\\\vlund\d
 =028  52$a1149871$bKanopy
 =035  \\$a(OCoLC)921956686
 =040  \\$aVDU$beng$cVDU
-=245  00$aSaute-Dry-Heat Cooking with Fat
+=245  00$aSaute-Dry-Heat Cooking with Fat$h[electronic resource]
 =264  \1$bThe Great Courses,$c2012.
 =264  \1$a[San Francisco, California, USA] :$bKanopy Streaming,$c2017.
 =300  \\$a1 online resource (streaming video file) (40 minutes):$bdigital, .flv file, sound
@@ -132,7 +125,6 @@
 =338  \\$aonline resource$bcr$2rdacarrier
 =500  \\$aTitle from title frames.
 =500  \\$aIn Process Record.
-=506  \$aAccess restricted to users at subscribing institutions
 =511  0\$aFeatures: Bill Briwa
 =518  \\$aOriginally produced by The Great Courses in 2012.
 =520  \\$aBegin strengthening your cooking techniques with a close look at using the right pan, the right amount of fat, and the right temperature to make crispy and delicious sauteed foods. As you explore the ins and outs of sauteing, you learn how to make a delicious (and simple) dish: Chicken Marsala.
@@ -141,8 +133,4 @@
 =653  \\$aFood Technology
 =710  2\$aThe Great Courses (Firm),$4dst
 =710  2\$aKanopy (Firm),$4dst
-=730  0\$aEarly American imprints (Online).$nFirst series,$pEvans.$5OCU
-=856  40$uhttp://uc.kanopystreaming.com/node/149872$zConnect to resource online$3Readex
-=949  \\$a*b3=z;bn=buint;
-=949  \1$luint$rs$t99
 

@@ -94,7 +94,7 @@ class utilityFunctions:
         #if an 856 field is present, check it against the above patterns.
         # if found, delete the field
         if rec['856'] is not None:
-            url = rec['856'].value()
+            url = rec['856']['u']
             if any(regex.match(url) for regex in regexes):
                 rec.remove_field(rec.get_fields('856')[0])
         return rec
@@ -117,18 +117,20 @@ class utilityFunctions:
     def Standardize856_956(self, *args):
         rec = args[0]
         if rec['856'] is not None:
-                field856 = rec['856']
-                if rec['856'].indicator1 != '4':
-                    print('Found URL field with unexpected indicator')
-                self.CleanURL(field856)
+            field856 = rec['856']
+            if rec['856'].indicator1 != '4':
+                print('Found URL field with unexpected indicator')
+            self.CleanURL(field856)
+            if len(args) > 1 and type(args[1]) == str:
+                rec['856'].add_subfield('3', args[1])
 
         if rec['956'] is not None:
             if rec['956'].indicator1 != '4':
                 print('Found URL field with unexpected indicator')
-                self.CleanURL(field956)
+            self.CleanURL(field956)
+            if len(args) > 1 and type(args[1]) == str:
+                rec['956'].add_subfield('3', args[1])
 
-        if len(args) > 1 and type(args[1]) == str:
-            rec['856'].add_subfield('3', args[1])
         return rec
 
     def Standardize856_956_BAK(self, *args):
@@ -463,6 +465,18 @@ class utilityFunctions:
                 CharRefIf.close()
         return rec
 
+
+    def AddEresourceGMD(self, rec):
+        if rec['245']['h'] is None:
+            if rec['245']['b'] is not None:
+                rec['245'].delete_subfield('b')
+                rec['245'].add_subfield('h', '[electronic resource]')
+            elif rec['245']['c'] is not None:
+                rec['245'].delete_subfield('c')
+                rec['245'].add_subfield('h', '[electronic resource]')
+            else:
+                rec['245'].add_subfield('h', '[electronic resource]')
+        return rec
 
     def SaveToMRK(self, recs, filename):
         filenameNoExt = re.sub('.\w*$', '', filename)
