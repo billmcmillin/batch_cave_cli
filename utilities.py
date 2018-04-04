@@ -125,6 +125,7 @@ class utilityFunctions:
                 rec['856'].add_subfield('3', args[1])
 
         if rec['956'] is not None:
+            field956 = rec['956']
             if rec['956'].indicator1 != '4':
                 print('Found URL field with unexpected indicator')
             self.CleanURL(field956)
@@ -492,7 +493,10 @@ class utilityFunctions:
         print('\n<Compiling file to MARC>\n')
         writer = MARCWriter(open(mrcFileName, "wb"))
         for r in recs:
-            writer.write(r)
+            try:
+                writer.write(r.as_marc())
+            except Exception as e:
+                print(str(e) + ' error. Encoding: ' + str(r))
         writer.close()
         return recs
 

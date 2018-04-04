@@ -90,7 +90,7 @@ class batchEdits:
         x = utilities.MakeMARCFile(recs, filename)
         return x
 
-
+##TODO########################################
     def ER_NBER(self, x, name='ER-NBER'):
         print('\nRunning change script '+ name + '\n')
         recs = utilities.BreakMARCFile(x)
@@ -132,30 +132,35 @@ class batchEdits:
         for rec in recs:
             for field in rec:
                 if field.tag == '856':
-                    print(field)
+                    #if any of the 856 fields match any of the above regex patterns, delete the whole field`
                     if any(regex.match(field.value()) for regex in regexes):
                         rec.remove_field(field)
-
-            rec = utilities.CharRefTrans(rec)
+                    #rename any 856$3 from Safari Books Online to Safari (ProQuest) :
+                    if field['3'] == 'Safari Books Online':
+                        field['3'] = 'Safari (ProQuest) :'
+                    #edit proxy URLs
+                    old_z = field['z']
+                    old_z = re.sub('Connect to resource', 'Connect to resource online', old_z)
+                    #old_z = re.sub('\(off-campus access\)', '(Off Campus Access)', old_z)
+                    old_z = re.sub('\(off-campus\)', '(Off Campus Access)', old_z)
+                    #old_z = re.sub('Connect to this resource online', 'Connect to resource online', old_z)
+                    #old_z = re.sub('\(off-campus access\)', '(Off Campus Access)', old_z)
+                    #old_z = re.sub('Connect to electronic resource', '$Connect to resource online', old_z)
+                    field['z'] = old_z
+                    #Change hyperlink tag from 856 to 956
+                    #field.tag = '956'
+            #Insert 002, 003, 730, 949 before supplied 008
+            rec.add_ordered_field(Field(tag = '003',data = 'ER-EAI-1st'))
+            rec.add_ordered_field(Field(tag = '949', indicators = ['\\', '1'],subfields = ['l','olink', 'r', 's', 't', '99']))
+            rec.add_ordered_field(Field(tag = '949', indicators = ['\\', '\\'],subfields = ['a','*b3=z;bn=bolin;']))
+            rec.add_ordered_field(Field(tag = '730', indicators =['0','\\'],subfields = ['a','Safari books online.', '5', 'OCU']))
+            #rec.remove_field(rec.get_fields('003')[0])
+            rec.add_ordered_field(Field(tag = '003',data = 'ER-O/L-Safari'))
+            rec.add_ordered_field(Field(tag = '002',data = 'O/L-Safari'))
+            #rec = utilities.Standardize856_956(rec, )
             rec = utilities.AddEresourceGMD(rec)
-        #Insert 002, 003, 730, 949 before supplied 008
-        #x = re.sub('(?m)^=008', r'=949  \\1$lolink$rs$t99\n=949\\\\$a*b3=z;bn=bolin;\n=730  0\\$aSafari books online.$5OCU\n=003 ER-O/L-Safari\n=002  O/L-Safari\n=003', x)
-        #x = re.sub('\$3Safari Books Online', '', x)
-        #edit proxy URLs
-        #x = re.sub('\$zConnect to resource', '$3Safari (ProQuest) :$zConnect to resource online', x)
-        #x = re.sub('\(off-campus access\)', '(Off Campus Access)', x)
-        #x = re.sub('\(off-campus\)', '(Off Campus Access)', x)
-        #x = re.sub('\$zConnect to this resource online', '$3Safari (ProQuest):$zConnect to resource online', x)
-        #x = re.sub('\(off-campus access\)', '(Off Campus Access)', x)
-        #x = re.sub('\$zConnect to electronic resource', '$3Safari(ProQuest):$zConnect to resource online', x)
-        #Change hyperlink tag from 856 to 956
-        #x = re.sub('(?m)^=856', '=956', x)
-        # = utilities.Standardize856_956(x, )
-        #x = utilities.AddEresourceGMD(x)
-        #x = utilities.DeleteLocGov(x)
-        #x = utilities.CharRefTrans(x)
-        #x = utilities.MarcEditSaveToMRK(x)
-        #x = utilities.MarcEditMakeFile(x)
+            rec = utilities.DeleteLocGov(rec)
+            rec = utilities.CharRefTrans(rec)
         rec = utilities.SaveToMRK(recs, filename)
         x = utilities.MakeMARCFile(recs, filename)
         return x
