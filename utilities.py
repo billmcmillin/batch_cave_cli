@@ -479,6 +479,19 @@ class utilityFunctions:
                 rec['245'].add_subfield('h', '[electronic resource]')
         return rec
 
+    # re-order 007 fields in a MARC record
+    def order_007(self, rec):
+        james_bond = []
+        for field in rec:
+            if field.tag == '007':
+                james_bond.append(field.data)
+                if len(james_bond) > 1:
+                    rec.remove_fields('007')
+                    james_bond.sort()
+                    for f in james_bond:
+                        rec.add_ordered_field(Field(tag = '007',data = f))
+        return rec
+
     def SaveToMRK(self, recs, filename):
         filenameNoExt = re.sub('.\w*$', '', filename)
         outfile = open(filenameNoExt + '_OUT.mrk', 'w')
