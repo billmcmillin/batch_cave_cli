@@ -508,8 +508,9 @@ class utilityFunctions:
         for r in recs:
             try:
                 writer.write(r.as_marc())
-            except Exception as e:
-                print(str(e) + ' error. Encoding: ' + str(r))
+            except:
+                r.force_utf8 = True
+                writer.write(r)
         writer.close()
         return recs
 
