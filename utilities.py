@@ -498,6 +498,7 @@ class utilityFunctions:
         print('\n<Writing file to MRK>\n')
         outfile = filenameNoExt + '_OUT.mrk'
         writer = TextWriter(open(outfile, 'wt'))
+        counter = 1
         for record in recs:
             try:
                 writer.write(record)
@@ -506,7 +507,8 @@ class utilityFunctions:
                 try:
                     writer.write(record)
                 except Exception as e:
-                    print(str(e))
+                    print('encoding error in record ' + counter + ': ' + str(e))
+            counter += 1
         writer.close()
         return recs
 
