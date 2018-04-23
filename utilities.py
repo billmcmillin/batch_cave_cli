@@ -503,7 +503,7 @@ class utilityFunctions:
                 writer.write(record)
             except:
                 record.force_utf8 = True
-                outfile.write(record)
+                writer.write(record)
         writer.close()
         return recs
 
