@@ -507,7 +507,7 @@ class utilityFunctions:
                 try:
                     writer.write(record)
                 except Exception as e:
-                    print('encoding error in record ' + counter + ': ' + str(e))
+                    print('encoding error in record ' + str(counter) + ': ' + str(e))
             counter += 1
         writer.close()
         return recs
