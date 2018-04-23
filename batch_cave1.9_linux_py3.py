@@ -1,4 +1,3 @@
-import pdb
 from pymarc import MARCReader, Record, Field
 from tkinter import *
 from tkinter.filedialog import askopenfilename
@@ -18,6 +17,10 @@ def BrowseFiles():#open file explorer
 
     return filename
 
+
+#########################################
+#batchEdits
+##########################################
 class batchEdits:
 
     def ER_EAI_2nd(self, x, name='ER-EAI-2ND'):
@@ -65,14 +68,11 @@ class batchEdits:
         x = utilities.MakeMARCFile(recs, filename)
         return x
 
-########### TODO: add ER_OECD ################
-
 
     def ER_OCLC_WCS_SDebk(self, x, name='ER-OCLC-WCS-SDebk'):
         print('\nRunning change script '+ name + '\n')
         recs = utilities.BreakMARCFile(x)
         for rec in recs:
-            rec.add_ordered_field(Field(tag = '949', indicators = ['\\', '1'], subfields = ['l','uint', 'r', 's', 't', '99']))
             rec.add_ordered_field(Field(tag = '949', indicators = ['\\', '\\'], subfields = ['a','*b3=z;bn=buint;']))
             rec.add_ordered_field(Field(tag = '730', indicators = ['0','\\'],subfields = ['a','ScienceDirect cBook Series.', '5', 'OCU']))
             rec.add_ordered_field(Field(tag = '003',data = 'ER-OCLC-WCS-SDebk'))
@@ -90,27 +90,33 @@ class batchEdits:
         x = utilities.MakeMARCFile(recs, filename)
         return x
 
-##TODO########################################
     def ER_NBER(self, x, name='ER-NBER'):
         print('\nRunning change script '+ name + '\n')
         recs = utilities.BreakMARCFile(x)
         # NBER has begun using two 856 fields. DELETE 856 fields with www.nber.org ... RETAIN 856 fields with dx.doi.org
         for rec in recs:
-            #x = re.sub('(?m)^=856.*www.nber.org.*\n', '', x)
-            rec.remove_field(rec.get_fields('856')[0])
-            #change 001 to 002, retain first letter and insert initial code
-            rec.add_ordered_field(Field(tag = '002',data = 'nber_' +rec['001'].value()[:1]))
-            #x = re.sub('(?m)^=001  (.*)', '=002  nber \\1', x)
-            #x = re.sub('(?m)^=001  ', '=002  nber_', x) 
-            #ADD 003, 006, , 533, 730, 949 before supplied 008
-            #x = re.sub('(?m)^=008', r'=949  \\1$luint$rs$t99\n=949  \\\\$a*b3=z;bn=buint;\n=830  \\0$aWorking paper series (National Bureau of Economic Research : Online)\n=730  0\\$aNBER working paper series online.$5OCU\n=533  \\\\$aElectronic reproduction.$bCambridge, Mass.$cNational Bureau of Economic Research,$d200-$e1 electronic text : PDF file.$fNBER working paper series.$nAccess restricted to patrons at subscribing institutions\n=007  cr\\mnu\n=006  m\\\\\\\\\\\\\\\\d\\\\\\\\\\\\\\\\\n=003  ER-NBER\n=008', x)
+            for field in rec:
+                if field.tag == '856' and field['u'].find("nber.org") >= 0:
+                    rec.remove_field(field)
+            #move value of 001 to 002
+            rec.add_ordered_field(Field(tag = '002',data = rec['001'].value()))
+            rec.remove_field(rec.get_fields('001')[0])
+            rec.add_ordered_field(Field(tag = '949', indicators = ['\\', '1'], subfields = ['l','uint', 'r', 's', 't', '99']))
+            rec.add_ordered_field(Field(tag = '949', indicators = ['\\', '\\'], subfields = ['a','*b3=z;bn=buint;']))
+            #rec.add_ordered_field(Field(tag = '830', indicators = ['\\', '0'], subfields = ['a', 'Working paper series (National Bureau of Economic Research : Online)']))
+            rec.add_ordered_field(Field(tag = '730', indicators =['0','\\'],subfields = ['a','NBER working paper series online.', '5', 'OCU']))
+            rec.add_ordered_field(Field(tag = '533', indicators = ['\\','\\'],subfields = ['a','Electronic reproduction.', 'b', 'Cambridge, Mass.', 'c', 'National Bureau of Economic Research,', 'd', '200-', 'e', '1 electronic text : PDF file.', 'f', 'NBER working paper series.', 'n', 'Access restricted to patrons at subscribing institutions']))
+            rec.add_ordered_field(Field(tag = '003',data = 'ER-NBER'))
             # 530 field, change Hardcopy to Print
-            #x = re.sub('(?m)^(=530.*)Hardcopy(.*)', '\\1Print\\2', x)
+            rec['530']['a'] = 'Print version available to institutional subscribers.'
             # 490 and 830 fields lack ISBD punctuation, supply where lacking
             #x = re.sub('(?m)^(=490.*)[^ ;](\$v.*)', '\\1 ;\\2', x)
-            #x = re.sub('(?m)^(=830.*)[^ ;](\$v.*)', '\\1 ;\\2', x)
+            four90a = rec['490']['a'] + ' ;'
+            rec['490']['a'] = four90a
+            eight30a = rec['830']['a'] + ' ;'
+            rec['830']['a'] = eight30a
             # delete supplied 690 fields
-            #x = re.sub('(?m)^=690.*\n', '', x)
+            rec.remove_field(rec.get_fields('690')[0])
             rec = utilities.DeleteLocGov(rec)
             rec = utilities.Standardize856_956(rec, 'NBER')
             rec = utilities.CharRefTrans(rec)
@@ -150,7 +156,6 @@ class batchEdits:
                     #Change hyperlink tag from 856 to 956
                     #field.tag = '956'
             #Insert 002, 003, 730, 949 before supplied 008
-            rec.add_ordered_field(Field(tag = '003',data = 'ER-EAI-1st'))
             rec.add_ordered_field(Field(tag = '949', indicators = ['\\', '1'],subfields = ['l','olink', 'r', 's', 't', '99']))
             rec.add_ordered_field(Field(tag = '949', indicators = ['\\', '\\'],subfields = ['a','*b3=z;bn=bolin;']))
             rec.add_ordered_field(Field(tag = '730', indicators =['0','\\'],subfields = ['a','Safari books online.', '5', 'OCU']))
@@ -164,6 +169,28 @@ class batchEdits:
         rec = utilities.SaveToMRK(recs, filename)
         x = utilities.MakeMARCFile(recs, filename)
         return x
+
+    def ER_OL_Sage_eRef(self, x, name='ER-O/L-Sage-eRef'):
+        recs = utilities.BreakMARCFile(x)
+        for rec in recs:
+            #Insert 002, 003, 730, 949 before supplied 003
+            rec.add_ordered_field(Field(tag = '002',data = 'O/L-Sage-eRef'))
+            rec.add_ordered_field(Field(tag = '949', indicators = ['\\', '1'],subfields = ['l','olink', 'r', 's', 't', '99']))
+            rec.add_ordered_field(Field(tag = '949', indicators = ['\\', '\\'],subfields = ['a','*bn=bolin;']))
+            rec.add_ordered_field(Field(tag = '730', indicators = ['0','\\'],subfields = ['a','Sage eReference..', '5', 'OCU']))
+            rec.add_ordered_field(Field(tag = '003',data = 'ER-O/L-Sage-eRef'))
+            rec.add_ordered_field(Field(tag = '002',data = 'O/L-Sage-eRef'))
+            rec = utilities.AddEresourceGMD(rec)
+            rec = utilities.DeleteLocGov(rec)
+            rec = utilities.CharRefTrans(rec)
+            rec = utilities.Standardize856_956(rec, 'SAGE Reference Online')
+        rec = utilities.SaveToMRK(recs, filename)
+        x = utilities.MakeMARCFile(recs, filename)
+        return x
+
+##############################3
+#end batchEdits
+##############################
 
 reStart = ''
 
