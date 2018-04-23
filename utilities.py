@@ -496,16 +496,15 @@ class utilityFunctions:
     def SaveToMRK(self, recs, filename):
         filenameNoExt = re.sub('.\w*$', '', filename)
         print('\n<Writing file to MRK>\n')
-        outfile = open(filenameNoExt + '_OUT.mrk', 'w')
-        writer = TextWriter(outfile)
+        outfile = filenameNoExt + '_OUT.mrk'
+        writer = TextWriter(open(outfile, 'wt'))
         for record in recs:
             try:
                 writer.write(record)
             except:
                 record.force_utf8 = True
-                outfile.write(record + '\n')
-        writer.close(close_fh=False)
-        outfile.close()
+                outfile.write(record)
+        writer.close()
         return recs
 
 
