@@ -40,7 +40,6 @@ class batchEdits:
             rec.remove_field(rec.get_fields('008')[0])
             rec = utilities.DeleteLocGov(rec)
             rec = utilities.Standardize856_956(rec)
-            rec = utilities.CharRefTrans(rec)
         rec = utilities.SaveToMRK(recs, filename)
         x = utilities.MakeMARCFile(recs, filename)
         return x
@@ -63,7 +62,6 @@ class batchEdits:
             rec.remove_field(rec.get_fields('008')[0])
             rec = utilities.DeleteLocGov(rec)
             rec = utilities.Standardize856_956(rec, 'Readex')
-            rec = utilities.CharRefTrans(rec)
         rec = utilities.SaveToMRK(recs, filename)
         x = utilities.MakeMARCFile(recs, filename)
         return x
@@ -85,7 +83,6 @@ class batchEdits:
             rec['956']['3'] = re.sub(r'ScienceDirect', 'ScienceDirect :', rec['956']['3'])
             rec = utilities.DeleteLocGov(rec)
             rec = utilities.Standardize856_956(rec, 'Readex')
-            rec = utilities.CharRefTrans(rec)
         rec = utilities.SaveToMRK(recs, filename)
         x = utilities.MakeMARCFile(recs, filename)
         return x
@@ -119,7 +116,6 @@ class batchEdits:
             rec.remove_field(rec.get_fields('690')[0])
             rec = utilities.DeleteLocGov(rec)
             rec = utilities.Standardize856_956(rec, 'NBER')
-            rec = utilities.CharRefTrans(rec)
             rec = utilities.AddEresourceGMD(rec)
         rec = utilities.SaveToMRK(recs, filename)
         x = utilities.MakeMARCFile(recs, filename)
@@ -165,7 +161,6 @@ class batchEdits:
             #rec = utilities.Standardize856_956(rec, )
             rec = utilities.AddEresourceGMD(rec)
             rec = utilities.DeleteLocGov(rec)
-            rec = utilities.CharRefTrans(rec)
         rec = utilities.SaveToMRK(recs, filename)
         x = utilities.MakeMARCFile(recs, filename)
         return x
@@ -182,7 +177,6 @@ class batchEdits:
             rec.add_ordered_field(Field(tag = '002',data = 'O/L-Sage-eRef'))
             rec = utilities.AddEresourceGMD(rec)
             rec = utilities.DeleteLocGov(rec)
-            rec = utilities.CharRefTrans(rec)
             rec = utilities.Standardize856_956(rec, 'SAGE Reference Online')
         rec = utilities.SaveToMRK(recs, filename)
         x = utilities.MakeMARCFile(recs, filename)
