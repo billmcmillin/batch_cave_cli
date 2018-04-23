@@ -495,31 +495,19 @@ class utilityFunctions:
 
     def SaveToMRK(self, recs, filename):
         filenameNoExt = re.sub('.\w*$', '', filename)
+        print('\n<Writing file to MRK>\n')
         outfile = open(filenameNoExt + '_OUT.mrk', 'w')
-        #outString = StringIO()
-        #writer = TextWriter(outString)
         writer = TextWriter(outfile)
         for record in recs:
             try:
                 writer.write(record)
             except:
                 record.force_utf8 = True
-                outfile.write(str(record) + '\n')
+                outfile.write(record + '\n')
         writer.close(close_fh=False)
         outfile.close()
         return recs
 
-    def SaveToMRKBAK(self, recs, filename):
-        filenameNoExt = re.sub('.\w*$', '', filename)
-        outfile = open(filenameNoExt + '_OUT.mrk', 'w')
-        for r in recs:
-            try:
-                outfile.write(str(r) + '\n')
-            except:
-                r.force_utf8 = True
-                outfile.write(str(r) + '\n')
-        outfile.close()
-        return recs
 
     def MakeMARCFile(self, recs, filename):
         filenameNoExt = re.sub('.\w*$', '', filename)
