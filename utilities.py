@@ -496,7 +496,11 @@ class utilityFunctions:
         filenameNoExt = re.sub('.\w*$', '', filename)
         outfile = open(filenameNoExt + '_OUT.mrk', 'w')
         for r in recs:
-            outfile.write(str(r) + '\n')
+            try:
+                outfile.write(str(r) + '\n')
+            except:
+                r.force_utf8 = True
+                outfile.write(str(r) + '\n')
         outfile.close()
         return recs
 
