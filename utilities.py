@@ -1,5 +1,6 @@
 import inspect, re, subprocess
-from pymarc import Record, Field, MARCReader, MARCWriter, marcxml
+from io import BytesIO, StringIO
+from pymarc import Record, Field, MARCReader, MARCWriter, marcxml, TextWriter
 
 class utilityFunctions:
 
@@ -493,6 +494,22 @@ class utilityFunctions:
         return rec
 
     def SaveToMRK(self, recs, filename):
+        filenameNoExt = re.sub('.\w*$', '', filename)
+        outfile = open(filenameNoExt + '_OUT.mrk', 'w')
+        #outString = StringIO()
+        #writer = TextWriter(outString)
+        writer = TextWriter(outfile)
+        for record in recs:
+            try:
+                writer.write(record)
+            except:
+                record.force_utf8 = True
+                outfile.write(str(record) + '\n')
+        writer.close(close_fh=False)
+        outfile.close()
+        return recs
+
+    def SaveToMRKBAK(self, recs, filename):
         filenameNoExt = re.sub('.\w*$', '', filename)
         outfile = open(filenameNoExt + '_OUT.mrk', 'w')
         for r in recs:
