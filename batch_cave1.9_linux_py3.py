@@ -2,7 +2,7 @@ from pymarc import MARCReader, Record, Field
 from tkinter import *
 from tkinter.filedialog import askopenfilename
 #import os, subprocess, re, htmlentitydefs, inspect, sys, MARC_lang, platform
-import os, html.parser, sys, MARC_lang, platform, re
+import os, html.parser, sys, platform, re
 from time import sleep, strftime
 from utilities import utilityFunctions
 
